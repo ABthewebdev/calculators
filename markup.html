@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>3-Input Formula Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav>
+    <div><a href="/index.html">Home</a></div>
+    <div><a href="/overhead.html">Overhead Calculator</a></div>
+  </nav>
+  <div class="calculator">
+    <h1 class="title">Markup Calculator</h1>
+
+    <div class="field">
+      <label for="job-costs">Job Costs</label>
+      <input type="number" id="job-costs" placeholder="300,000" step="any" />
+    </div>
+
+    <div class="field">
+      <label for="overhead">Overhead Expenses</label>
+      <input type="number" id="overhead" placeholder="100,000" step="any" />
+    </div>
+
+    <div class="field">
+      <label for="net-profit">Net Profit %</label>
+      <input type="number" id="net-profit" placeholder="10" step="any" />
+    </div>
+
+    <button id="calculateBtn" class="btn-calc">Calculate</button>
+
+    <div class="field">
+      <label for="result">Result</label>
+      <input type="text" id="result" readonly />
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

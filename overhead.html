@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markup Calculator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+
+        nav {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        nav a {
+            margin-right: 20px;
+            text-decoration: none;
+            color: #2563eb;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1f2937;
+            font-size: 28px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: flex-end;
+            gap: 30px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-cell {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #000;
+        }
+
+        .legend-cell.input {
+            background: #ffeb3b;
+            border: 1px solid #ccc;
+        }
+
+        .legend-cell.output {
+            background: white;
+            border: 2px solid #000;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1f2937;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .input-cell {
+            background: #ffeb3b;
+            border: 1px solid #ccc;
+        }
+
+        .input-cell input {
+            width: 100%;
+            padding: 6px;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+        }
+
+        .output-cell {
+            background: white;
+            border: 2px solid #000;
+            font-weight: 600;
+        }
+
+        .notes {
+            font-size: 13px;
+            color: #6b7280;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .instructions {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 4px solid #2563eb;
+        }
+
+        .instructions h3 {
+            margin-bottom: 15px;
+            color: #1f2937;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .add-cost-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .add-cost-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .remove-cost-btn {
+            padding: 4px 10px;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-cost-btn:hover {
+            background: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div><a href="/index.html">Home</a></div>
+        <div><a href="/markup.html">Markup Calculator</a></div>
+    </nav>
+
+    <div class="container">
+        <h1>Markup Calculator</h1>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-cell input"></div>
+                <span><strong>Input Cell:</strong> Input your values in cells that have this background color.</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-cell output"></div>
+                <span><strong>Output Cell:</strong> Do not adjust these, the calculator will update these values automatically.</span>
+            </div>
+        </div>
+
+        <!-- Revenue Inputs Section -->
+        <div class="section">
+            <h2 class="section-title">Revenue Inputs</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Line Item</th>
+                        <th>Description</th>
+                        <th>Input</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Projected Annual Sales</strong></td>
+                        <td>Total revenue you expect to earn in a single year</td>
+                        <td class="input-cell">
+                            <input type="number" id="annual-sales" placeholder="0" step="1000">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Target Owner Take Home (%)</strong></td>
+                        <td>The percentage of profit the owner wants to take home after all expenses</td>
+                        <td class="input-cell">
+                            <input type="number" id="owner-take-home-pct" placeholder="0" step="0.1">
+                        </td>
+                        <td>Typically 8-12% of revenue</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Target Owner Take Home ($)</strong></td>
+                        <td>Expected Owner Take Home</td>
+                        <td class="output-cell" id="owner-take-home-amt">—</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Overhead Cost Inputs Section -->
+        <div class="section">
+            <h2 class="section-title">Overhead Cost Inputs</h2>
+            <table id="overhead-costs-table">
+                <thead>
+                    <tr>
+                        <th>Line Item</th>
+                        <th>Input</th>
+                        <th style="width: 50px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="overhead-costs-body">
+                    <tr>
+                        <td><strong>Rent</strong></td>
+                        <td class="input-cell">
+                            <input type="number" class="overhead-input" placeholder="0" step="100">
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="remove-cost-btn" onclick="this.closest('tr').remove(); calculate();" title="Delete">×</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Office Salaries</strong></td>
+                        <td class="input-cell">
+                            <input type="number" class="overhead-input" placeholder="0" step="100">
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="remove-cost-btn" onclick="this.closest('tr').remove(); calculate();" title="Delete">×</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insurance</strong></td>
+                        <td class="input-cell">
+                            <input type="number" class="overhead-input" placeholder="0" step="100">
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="remove-cost-btn" onclick="this.closest('tr').remove(); calculate();" title="Delete">×</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vehicle and Equipment Leases</strong></td>
+                        <td class="input-cell">
+                            <input type="number" class="overhead-input" placeholder="0" step="100">
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="remove-cost-btn" onclick="this.closest('tr').remove(); calculate();" title="Delete">×</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Utilities</strong></td>
+                        <td class="input-cell">
+                            <input type="number" class="overhead-input" placeholder="0" step="100">
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="remove-cost-btn" onclick="this.closest('tr').remove(); calculate();" title="Delete">×</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Marketing and Advertising</strong></td>
+                        <td class="input-cell">
+                            <input type="number" class="overhead-input" placeholder="0" step="100">
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="remove-cost-btn" onclick="this.closest('tr').remove(); calculate();" title="Delete">×</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Licenses and Permits</strong></td>
+                        <td class="input-cell">
+                            <input type="number" class="overhead-input" placeholder="0" step="100">
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="remove-cost-btn" onclick="this.closest('tr').remove(); calculate();" title="Delete">×</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Legal and Accounting</strong></td>
+                        <td class="input-cell">
+                            <input type="number" class="overhead-input" placeholder="0" step="100">
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="remove-cost-btn" onclick="this.closest('tr').remove(); calculate();" title="Delete">×</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Office Supplies</strong></td>
+                        <td class="input-cell">
+                            <input type="number" class="overhead-input" placeholder="0" step="100">
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="remove-cost-btn" onclick="this.closest('tr').remove(); calculate();" title="Delete">×</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Other Fixed Costs</strong></td>
+                        <td class="input-cell">
+                            <input type="number" class="overhead-input" placeholder="0" step="100">
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="remove-cost-btn" onclick="this.closest('tr').remove(); calculate();" title="Delete">×</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Overhead Costs</strong></td>
+                        <td class="output-cell" id="total-overhead">—</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="add-cost-btn" onclick="addOverheadCost()">+ Add Overhead Cost</button>
+            <p class="notes">Populate these cells with your approximate annual fixed costs in your business. You can add your own lines to the list as well if you have additional costs you want to include.</p>
+        </div>
+
+        <!-- Markup Output Section -->
+        <div class="section">
+            <h2 class="section-title">Markup Output</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Line Item</th>
+                        <th>Description</th>
+                        <th>Output</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Markup Ratio</strong></td>
+                        <td>The ratio between your costs and your marked up price</td>
+                        <td class="output-cell" id="markup-ratio">—</td>
+                        <td>Multiply your project costs by this number to calculate your project price.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Markup Percentage</strong></td>
+                        <td>Markup as a percentage</td>
+                        <td class="output-cell" id="markup-percentage">—</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- How to use this calculator Section -->
+        <div class="section">
+            <div class="instructions">
+                <h3>How to use this calculator</h3>
+                <ol>
+                    <li>Enter your company's expected full year of sales and the profit percentage the owner wants to take home in the 'Revenue Inputs' section.</li>
+                    <li>Input your business overhead costs in the 'Overhead Cost Inputs' section. Feel free to add additional overhead costs if you need!</li>
+                    <li>Your calculated markup percentage will appear in the 'Markup Output' section in the 'Markup Percentage' row.</li>
+                    <li>View the sample estimate to see how to apply this markup to a project in the 'Example Project Calculation' section.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Format number as currency
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+
+        // Format number with decimals
+        function formatNumber(value, decimals = 2) {
+            return value.toFixed(decimals);
+        }
+
+        // Format percentage
+        function formatPercentage(value, decimals = 1) {
+            return value.toFixed(decimals) + '%';
+        }
+
+        // Calculate all values
+        function calculate() {
+            // Get revenue inputs
+            const annualSalesInput = document.getElementById('annual-sales');
+            const ownerTakeHomePctInput = document.getElementById('owner-take-home-pct');
+            const annualSales = parseFloat(annualSalesInput.value) || 0;
+            const ownerTakeHomePct = parseFloat(ownerTakeHomePctInput.value) || 0;
+
+            // Calculate owner take home amount
+            if (annualSales > 0 && ownerTakeHomePct > 0) {
+                const ownerTakeHomeAmt = annualSales * (ownerTakeHomePct / 100);
+                document.getElementById('owner-take-home-amt').textContent = formatCurrency(ownerTakeHomeAmt);
+            } else {
+                document.getElementById('owner-take-home-amt').textContent = '—';
+            }
+
+            // Calculate total overhead costs
+            const overheadInputs = document.querySelectorAll('.overhead-input');
+            let totalOverhead = 0;
+            overheadInputs.forEach(input => {
+                totalOverhead += parseFloat(input.value) || 0;
+            });
+            if (totalOverhead > 0) {
+                document.getElementById('total-overhead').textContent = formatCurrency(totalOverhead);
+            } else {
+                document.getElementById('total-overhead').textContent = '—';
+            }
+
+            // Calculate markup ratio
+            // Markup Ratio = Annual Sales / (Annual Sales - Total Overhead - Owner Take Home)
+            if (annualSales > 0 && ownerTakeHomePct > 0) {
+                const ownerTakeHomeAmt = annualSales * (ownerTakeHomePct / 100);
+                const costOfGoodsSold = annualSales - totalOverhead - ownerTakeHomeAmt;
+                if (costOfGoodsSold > 0) {
+                    const markupRatio = annualSales / costOfGoodsSold;
+                    document.getElementById('markup-ratio').textContent = formatNumber(markupRatio, 2);
+                    
+                    // Calculate markup percentage
+                    const markupPercentage = (markupRatio - 1) * 100;
+                    document.getElementById('markup-percentage').textContent = formatPercentage(markupPercentage, 1);
+                } else {
+                    document.getElementById('markup-ratio').textContent = '—';
+                    document.getElementById('markup-percentage').textContent = '—';
+                }
+            } else {
+                document.getElementById('markup-ratio').textContent = '—';
+                document.getElementById('markup-percentage').textContent = '—';
+            }
+        }
+
+        // Add new overhead cost row
+        function addOverheadCost() {
+            const tbody = document.getElementById('overhead-costs-body');
+            const totalRow = tbody.querySelector('tr:last-child');
+            
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td class="input-cell">
+                    <input type="text" class="cost-name-input" placeholder="Cost name" style="width: 100%; padding: 6px; border: none; background: transparent; font-size: 14px; font-weight: 600;">
+                </td>
+                <td class="input-cell">
+                    <input type="number" class="overhead-input" placeholder="0" step="100">
+                </td>
+                <td style="text-align: center;">
+                    <button class="remove-cost-btn" onclick="this.closest('tr').remove(); calculate();" title="Delete">×</button>
+                </td>
+            `;
+            
+            tbody.insertBefore(newRow, totalRow);
+            
+            // Add event listener to new input
+            const newInput = newRow.querySelector('.overhead-input');
+            newInput.addEventListener('input', calculate);
+        }
+
+        // Add event listeners
+        document.getElementById('annual-sales').addEventListener('input', calculate);
+        document.getElementById('owner-take-home-pct').addEventListener('input', calculate);
+        
+        const overheadInputs = document.querySelectorAll('.overhead-input');
+        overheadInputs.forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>
